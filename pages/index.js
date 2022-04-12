@@ -26,29 +26,39 @@ export default function Home() {
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
 
-        fetch(`https://api.aladhan.com/v1/calendar?latitude=${latitude}&longitude=${longitude}&method=9&month=${month + 1}&year=${year}`)
-          .then(response => response.json())
-          .then(data => {
-            
-            let date = date_obj.getDate();
-
-            setSalahTimings((prev) => {
-              return {
-                ...prev,
-                fajr: data.data[date - 1].timings.Fajr,
-                dhuhr: data.data[date - 1].timings.Dhuhr,
-                asr: data.data[date - 1].timings.Asr,
-                maghrib: data.data[date - 1].timings.Maghrib,
-                isha: data.data[date - 1].timings.Isha,
-                sunrise: data.data[date - 1].timings.Sunrise,
-                sunset: data.data[date - 1].timings.Sunset
-              }
-            })
+        fetch(`api/timings`, {
+          method: 'POST',
+          ContentType: 'application/json',
+          body: JSON.stringify({
+            latitude: latitude,
+            longitude: longitude,
+            month: month,
+            year: year
           })
-          .catch(err => console.log(err))
+        }).then((res) => {
+          return res.json();
+        }).then((data) => {
+          console.log(data.timings);
+
+          setSalahTimings((prev) => {
+            return {
+              ...prev,
+              fajr: data.timings.Fajr,
+              dhuhr: data.timings.Dhuhr,
+              asr: data.timings.Asr,
+              maghrib: data.timings.Maghrib,
+              isha: data.timings.Isha,
+              sunrise: data.timings.Sunrise,
+              sunset: data.timings.Sunset
+            }
+          })
+        }).catch((err) => {
+          console.log(err);
+        })
+
       }, (error) => console.log(error))
     } else {
-      console.log('not supported');
+      console.log('geolocation api not supported');
     }
 
   }, [])
