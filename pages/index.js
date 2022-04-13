@@ -1,27 +1,61 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
-// import styles from '../styles/Home.module.css'
 
 export default function Home() {
 
   const [salahTimings, setSalahTimings] = useState({
-    fajr: '',
-    dhuhr: '',
-    asr: '',
-    maghrib: '',
-    isha: '',
-    sunrise: '',
-    sunset: ''
+    fajr: '00:00',
+    dhuhr: '00:00',
+    asr: '00:00',
+    maghrib: '00:00',
+    isha: '00:00',
+    sunrise: '00:00',
+    sunset: '00:00'
   });
 
   const [salah, setSalah] = useState(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Sunrise', 'Sunset']);
 
   useEffect(() => {
 
+    if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
+
+      fetchTimings();
+
+    } else {
+
+      let now = new Date().getDate();
+
+      if (now == Number(localStorage.getItem('last-fetch-date-for-prayerTimings'))) {
+
+        let timings = JSON.parse(localStorage.getItem('timings'));
+
+        setSalahTimings((prev) => {
+          return {
+            ...prev,
+            fajr: `${formatTime(timings.Fajr)}`,
+            dhuhr: `${formatTime(timings.Dhuhr)}`,
+            asr: `${formatTime(timings.Asr)}`,
+            maghrib: `${formatTime(timings.Maghrib)}`,
+            isha: `${formatTime(timings.Isha)}`,
+            sunrise: `${formatTime(timings.Sunrise)}`,
+            sunset: `${formatTime(timings.Sunset)}`
+          }
+        })
+
+      } else {
+        fetchTimings();
+      }
+    }
+
+
+  }, [])
+
+  function fetchTimings() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
 
+        localStorage.setItem('last-fetch-date-for-prayerTimings', new Date().getDate());
+        console.log(new Date().getDate())
         let date_obj = new Date();
         let month = date_obj.getMonth();
         let year = date_obj.getFullYear();
@@ -42,9 +76,7 @@ export default function Home() {
         }).then((data) => {
           console.log(data.timings);
 
-          function formatTime(time) {
-            return time.split(" ")[0]
-          }
+          localStorage.setItem('timings', JSON.stringify(data.timings));
 
           setSalahTimings((prev) => {
             return {
@@ -66,8 +98,11 @@ export default function Home() {
     } else {
       console.log('geolocation api not supported');
     }
+  }
 
-  }, [])
+  function formatTime(time) {
+    return time.split(" ")[0]
+  }
 
   return (
     <div className='container'>

@@ -1,7 +1,16 @@
+$primary-color: #223843;
+$secondary-color: #EFF1F3;
+$border-color: #89959B;
+$highlight-color: #D8B4A0;
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
+    background-color: $primary-color;
 }
 
 .container {
@@ -9,9 +18,7 @@
 }
 
 .main {
-    // min-height: 100vh;
     padding: 4rem 0;
-    // flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,19 +28,28 @@
         display: flex;
         flex-flow: column;
         gap: 2rem;
-        width: 60%;
-        max-width: 30rem;
+        width: 70%;
+        max-width: 25rem;
+        color: $secondary-color;
         
         .salah-time-individual-contain {
             display: flex;
             flex-direction: column;
-            border: 0.1rem solid;
+            border: 0.1rem solid $border-color;
             border-radius: 0.4rem;
-            padding: 1rem;
+            padding: 1.5rem;
+            gap: 0.5rem;
 
+            .whichsalah {
+                font-size: 1.5rem;
+                font-family: 'Josefin Sans', sans-serif;
+            }
+            
             .time {
-                font-size: 2rem;
+                font-size: 3rem;
                 align-self: flex-end;
+                font-family: 'Lato', sans-serif;
+                font-weight: bold;
             }
         }
     }
