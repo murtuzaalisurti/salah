@@ -1,5 +1,40 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.container {
+    padding: 0 2rem;
+}
+
+.main {
+    // min-height: 100vh;
+    padding: 4rem 0;
+    // flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .timings {
+        display: flex;
+        flex-flow: column;
+        gap: 2rem;
+        width: 60%;
+        max-width: 30rem;
+        
+        .salah-time-individual-contain {
+            display: flex;
+            flex-direction: column;
+            border: 0.1rem solid;
+            border-radius: 0.4rem;
+            padding: 1rem;
+
+            .time {
+                font-size: 2rem;
+                align-self: flex-end;
+            }
+        }
+    }
 }
