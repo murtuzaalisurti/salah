@@ -19,9 +19,10 @@ export default function Home() {
 
     if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
 
-      fetchTimings();
+      handlePermission();
 
     } else {
+      // handlePermission();
 
       let now = new Date().getDate();
 
@@ -43,7 +44,7 @@ export default function Home() {
         })
 
       } else {
-        fetchTimings();
+        handlePermission();
       }
     }
 
@@ -55,7 +56,7 @@ export default function Home() {
       navigator.geolocation.getCurrentPosition((position) => {
 
         localStorage.setItem('last-fetch-date-for-prayerTimings', new Date().getDate());
-        console.log(new Date().getDate())
+
         let date_obj = new Date();
         let month = date_obj.getMonth();
         let year = date_obj.getFullYear();
@@ -74,7 +75,7 @@ export default function Home() {
         }).then((res) => {
           return res.json();
         }).then((data) => {
-          console.log(data.timings);
+          // console.log(data.timings);
 
           localStorage.setItem('timings', JSON.stringify(data.timings));
 
@@ -94,10 +95,44 @@ export default function Home() {
           console.log(err);
         })
 
-      }, (error) => console.log(error))
+      }, ((error) => {
+        console.log(error)
+      }))
     } else {
       console.log('geolocation api not supported');
     }
+  }
+
+  function handlePermission() {
+    navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+      if (result.state == 'granted') {
+        report(result.state);
+        document.querySelector('.alert').style.display = 'none';
+        fetchTimings();
+      } else if (result.state == 'prompt') {
+        report(result.state);
+        fetchTimings();
+
+        result.onchange = () => {
+
+          if(result.state == 'denied'){
+            document.querySelector('.alert').style.display = 'initial';
+            document.querySelector('.alert').innerHTML = 'Please enable location services!'
+          }
+
+        }
+      } else if (result.state == 'denied') {
+        report(result.state);
+        document.querySelector('.alert').innerHTML = 'Please enable location services!'
+      }
+      result.addEventListener('change', function () {
+        report(result.state);
+      });
+    });
+  }
+
+  function report(state) {
+    console.log('Permission ' + state);
   }
 
   function formatTime(time) {
@@ -114,6 +149,7 @@ export default function Home() {
 
 
       <main className='main'>
+        <div className="alert"></div>
         <div className="timings">
           {Object.keys(salahTimings).map((key, index) => {
             return (
