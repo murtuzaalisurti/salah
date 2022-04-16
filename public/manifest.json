@@ -3,7 +3,7 @@
     "short_name": "Salah Time",
     "description": "A web app by Murtuzaali Surti",
     "theme_color": "#223843",
-    "background_color": "#223843",
+    "background_color": "#ededeb",
     "orientation": "portrait",
     "display": "standalone",
     "scope": "/",
