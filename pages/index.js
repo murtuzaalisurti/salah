@@ -153,6 +153,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+
+    document.querySelector('.pending') == null ? document.querySelector('.timings > div').classList.add('reset') : document.querySelector('.timings > div').classList.remove('reset');
+
     document.querySelectorAll('.pending').forEach((element, index) => {
       index == 0 && element.classList.add('first')
     })
