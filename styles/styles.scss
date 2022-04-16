@@ -51,6 +51,12 @@ body {
                 font-family: 'Lato', sans-serif;
                 font-weight: bold;
             }
+
+        }
+        
+        :not(.pending) ~ .pending.first {
+            color: $highlight-color;
+            border-color: $highlight-color;
         }
     }
 }

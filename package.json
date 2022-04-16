@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
+    "moment": "^2.29.2",
     "next": "12.1.4",
     "react": "18.0.0",
     "react-dom": "18.0.0"

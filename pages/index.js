@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import moment from 'moment';
 
 export default function Home() {
 
@@ -14,6 +15,8 @@ export default function Home() {
   });
 
   const [salah, setSalah] = useState(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Sunrise', 'Sunset']);
+
+  const [milliseconds, setMilliseconds] = useState(moment().format('x'));
 
   useEffect(() => {
 
@@ -139,6 +142,22 @@ export default function Home() {
     return time.split(" ")[0]
   }
 
+  useEffect(() => {
+    let refresh = setInterval(() => {
+      setMilliseconds(moment().format('x'))
+    }, 60000)
+
+    return () => {
+      clearInterval(refresh);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.querySelectorAll('.pending').forEach((element, index) => {
+      index == 0 && element.classList.add('first')
+    })
+  })
+
   return (
     <div className='container'>
       <Head>
@@ -151,13 +170,15 @@ export default function Home() {
       <main className='main'>
         <div className="alert"></div>
         <div className="timings">
-          {Object.keys(salahTimings).map((key, index) => {
-            return (
-              <div className='salah-time-individual-contain' key={index}>
-                <div className="whichsalah">{`${salah[index]}`}</div>
-                <div className="time">{`${salahTimings[key]}`}</div>
-              </div>
-            )
+          {Object.keys(salahTimings).map((key, index) => {            
+            if(key !== 'sunrise' && key !== 'sunset') {
+              return (
+                <div className={`salah-time-individual-contain${moment({hour: salahTimings[key].split(':')[0], minute: salahTimings[key].split(':')[1] }).format('x') > milliseconds ? ` pending` : ' done'}`} key={index}>
+                  <div className='whichsalah'>{`${salah[index]}`}</div>
+                  <div className="time">{`${salahTimings[key]}`}</div>
+                </div>
+              )
+            }
           })}
         </div>
       </main>
