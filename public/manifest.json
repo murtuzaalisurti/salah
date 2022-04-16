@@ -1,11 +1,13 @@
 {
+    "name": "Salah Time",
+    "short_name": "Salah Time",
+    "description": "A web app by Murtuzaali Surti",
     "theme_color": "#223843",
     "background_color": "#223843",
+    "orientation": "portrait",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Salah Time PWA",
-    "short_name": "salahTime",
     "icons": [
         {
             "src": "/icon-192x192.png",
