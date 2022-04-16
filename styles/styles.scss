@@ -14,11 +14,24 @@ body {
 }
 
 .container {
+
     padding: 0 2rem;
+
+    .circle-element {
+    
+        .circles {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: auto;
+        }
+
+    }
 }
 
 .main {
-    padding: 4rem 0;
+    padding: 15rem 0 4rem 0;
     display: flex;
     flex-direction: column;
     justify-content: center;

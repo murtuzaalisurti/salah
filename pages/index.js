@@ -1,8 +1,12 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import moment from 'moment';
 
 export default function Home() {
+
+  // islamic calendar
+  // https://api.aladhan.com/v1/gToHCalendar/4/2022?adjustment=1
 
   const [salahTimings, setSalahTimings] = useState({
     fajr: '00:00',
@@ -78,7 +82,6 @@ export default function Home() {
         }).then((res) => {
           return res.json();
         }).then((data) => {
-          // console.log(data.timings);
 
           localStorage.setItem('timings', JSON.stringify(data.timings));
 
@@ -118,7 +121,7 @@ export default function Home() {
 
         result.onchange = () => {
 
-          if(result.state == 'denied'){
+          if (result.state == 'denied') {
             document.querySelector('.alert').style.display = 'initial';
             document.querySelector('.alert').innerHTML = 'Please enable location services!'
           }
@@ -166,17 +169,19 @@ export default function Home() {
       <Head>
         <title>Salah</title>
         <meta name="description" content="Islamic Prayer Timings" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className="circle-element">
+        <img className="circles" src="/images/circles.png" alt="circles" />
+      </div>
 
       <main className='main'>
         <div className="alert"></div>
         <div className="timings">
-          {Object.keys(salahTimings).map((key, index) => {            
-            if(key !== 'sunrise' && key !== 'sunset') {
+          {Object.keys(salahTimings).map((key, index) => {
+            if (key !== 'sunrise' && key !== 'sunset') {
               return (
-                <div className={`salah-time-individual-contain${moment({hour: salahTimings[key].split(':')[0], minute: salahTimings[key].split(':')[1] }).format('x') > milliseconds ? ` pending` : ' done'}`} key={index}>
+                <div className={`salah-time-individual-contain${moment({ hour: salahTimings[key].split(':')[0], minute: salahTimings[key].split(':')[1] }).format('x') > milliseconds ? ` pending` : ' done'}`} key={index}>
                   <div className='whichsalah'>{`${salah[index]}`}</div>
                   <div className="time">{`${salahTimings[key]}`}</div>
                 </div>
@@ -185,9 +190,6 @@ export default function Home() {
           })}
         </div>
       </main>
-
-      <footer>
-      </footer>
     </div>
   )
 }
