@@ -38,7 +38,7 @@ export default function Home() {
       fetchTimings();
 
     } else {
-      // fetchTimings();
+      fetchTimings();
 
       let now = new Date().getDate();
 
@@ -74,10 +74,7 @@ export default function Home() {
         document.querySelector('.alert').classList.add('none');
 
         localStorage.setItem('last-fetch-date-for-prayerTimings', new Date().getDate());
-
-        let date_obj = new Date();
-        let month = date_obj.getMonth();
-        let year = date_obj.getFullYear();
+        
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
 
@@ -87,8 +84,8 @@ export default function Home() {
           body: JSON.stringify({
             latitude: latitude,
             longitude: longitude,
-            month: month,
-            year: year
+            month: currentDate.month,
+            year: currentDate.year
           })
         }).then((res) => {
           return res.json();
