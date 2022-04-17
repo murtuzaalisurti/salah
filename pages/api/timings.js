@@ -15,9 +15,7 @@ export default function handler(req, res) {
         })
 
     } catch(e){
-
         console.log(e);
         res.status(500).json({error: 'internal server error (data not fetched)'});
-
     }
 }

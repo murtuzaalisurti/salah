@@ -1,12 +1,10 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import moment from 'moment';
 
 export default function Home() {
 
-  // islamic calendar
-  // https://api.aladhan.com/v1/gToHCalendar/4/2022?adjustment=1
+  // states ------------------------------------------------------
 
   const [salahTimings, setSalahTimings] = useState({
     fajr: '00:00',
@@ -31,19 +29,18 @@ export default function Home() {
 
   const [islamicCalendar, setIslamicCalendar] = useState({});
 
+  // salah timings ----------------------------------------------
+
+  // retrieve prayer timings from localStorage or API
   useEffect(() => {
 
     if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
-
       fetchTimings();
-
     } else {
       // fetchTimings();
-
       let now = new Date().getDate();
 
       if (now == Number(localStorage.getItem('last-fetch-date-for-prayerTimings'))) {
-
         let timings = JSON.parse(localStorage.getItem('timings'));
 
         setSalahTimings((prev) => {
@@ -58,21 +55,20 @@ export default function Home() {
             sunset: `${formatTime(timings.Sunset)}`
           }
         })
-
       } else {
         fetchTimings();
       }
     }
-
-
   }, [])
 
+  // fetch prayer timings from API
   function fetchTimings() {
+
     if (navigator.geolocation) {
+
       navigator.geolocation.getCurrentPosition((position) => {
 
         document.querySelector('.alert').classList.add('none');
-
         localStorage.setItem('last-fetch-date-for-prayerTimings', new Date().getDate());
         
         let latitude = position.coords.latitude;
@@ -110,17 +106,18 @@ export default function Home() {
         })
 
       }, (error) => {
-        console.log(error)
         if(error.PERMISSION_DENIED || error.POSITION_UNAVAILABLE || error.TIMEOUT) {
           document.querySelector('.alert').classList.remove('none');
         }
       })
+
     } else {
       console.log('geolocation api not supported');
     }
   }
 
   // doesn't support Safari | MacOS | iOS
+  // so it's removed (not executed)
   function handlePermission() {
     navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
       if (result.state == 'granted') {
@@ -148,15 +145,19 @@ export default function Home() {
     });
   }
 
+  // part of handlePermission()
   function report(state) {
     console.log('Permission ' + state);
   }
 
+  // format time (split time from timezone)
   function formatTime(time) {
     return time.split(" ")[0]
   }
 
+  // update milliseconds at a specific interval
   useEffect(() => {
+
     let refresh = setInterval(() => {
       setMilliseconds(moment().format('x'))
     }, 60000)
@@ -166,6 +167,7 @@ export default function Home() {
     }
   }, []);
 
+  // pending and done salah timings display logic
   useEffect(() => {
 
     document.querySelector('.pending') == null ? document.querySelector('.timings > div').classList.add('reset') : document.querySelector('.timings > div').classList.remove('reset');
@@ -175,6 +177,9 @@ export default function Home() {
 
   })
 
+  // calendar ----------------------------------------------------------
+
+  // fetch islamic calendar from API
   function fetchCalendar() {
     fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
         return res.json();
@@ -189,6 +194,7 @@ export default function Home() {
       })
   }
 
+  // retrieve islamic calendar from local storage or from API
   useEffect(() => {
 
     if(localStorage.getItem('lastUpdatedMonth') == null || localStorage.getItem('islamic-days') == null) {
