@@ -24,6 +24,7 @@ body {
             top: -10%;
             left: -10%;
             width: 50%;
+            max-width: 18rem;
             height: auto;
         }
 
@@ -31,11 +32,53 @@ body {
 }
 
 .main {
-    padding: 15rem 0 4rem 0;
+    padding: 11rem 0 4rem 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .alert {
+        width: 80%;
+        max-width: 25rem;
+        text-align: center;
+        color: aliceblue;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        border: 0.2rem solid #ff9c9c;
+        border-radius: 0.5rem;
+        font-family: 'Poppins', sans serif;
+    }
+
+    .none {
+        display: none;
+    }
+
+    .fullDate {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 4rem;
+
+        .islamicDateDisplay {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            align-items: center;
+            font-size: 2.1rem;
+            text-align: center;
+            color: $highlight-color;
+        }
+
+        .dayDisplay {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            color: $highlight-color;
+        }
+    }
+
 
     .timings {
         display: flex;

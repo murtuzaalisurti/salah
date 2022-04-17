@@ -22,6 +22,15 @@ export default function Home() {
 
   const [milliseconds, setMilliseconds] = useState(moment().format('x'));
 
+  const [currentDate, setCurrentDate] = useState({
+    month: new Date().toLocaleString('default', {month: 'numeric'}),
+    year: new Date().toLocaleString('default', {year: 'numeric'}),
+    date: new Date().toLocaleString('default', {day: 'numeric'}),
+    weekday: new Date().toLocaleString('default', {weekday: 'long'})
+  })
+
+  const [islamicCalendar, setIslamicCalendar] = useState({});
+
   useEffect(() => {
 
     if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
@@ -113,7 +122,7 @@ export default function Home() {
     navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
       if (result.state == 'granted') {
         report(result.state);
-        document.querySelector('.alert').style.display = 'none';
+        document.querySelector('.alert').classList.add('none');
         fetchTimings();
       } else if (result.state == 'prompt') {
         report(result.state);
@@ -122,14 +131,13 @@ export default function Home() {
         result.onchange = () => {
 
           if (result.state == 'denied') {
-            document.querySelector('.alert').style.display = 'initial';
-            document.querySelector('.alert').innerHTML = 'Please enable location services!'
+            document.querySelector('.alert').classList.remove('none');
           }
 
         }
       } else if (result.state == 'denied') {
         report(result.state);
-        document.querySelector('.alert').innerHTML = 'Please enable location services!'
+        document.querySelector('.alert').classList.remove('none');
       }
       result.addEventListener('change', function () {
         report(result.state);
@@ -164,6 +172,19 @@ export default function Home() {
     })
   })
 
+  useEffect(() => {
+
+    fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
+      return res.json();
+    }).then((data) => {
+      setIslamicCalendar((prev) => {
+        return data.data;
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
   return (
     <div className='container'>
       <Head>
@@ -176,7 +197,21 @@ export default function Home() {
       </div>
 
       <main className='main'>
-        <div className="alert"></div>
+        <div className="fullDate">
+          <div className="islamicDateDisplay">
+            {
+              islamicCalendar[currentDate.date - 1] !== undefined && (
+                <>
+                  <div className="islamDay">{islamicCalendar[currentDate.date - 1].hijri.day}</div>
+                  <div className="islamMonth">{islamicCalendar[currentDate.date - 1].hijri.month.en},</div>
+                  <div className="islamYear">{islamicCalendar[currentDate.date - 1].hijri.year}</div>
+                </>
+              )
+            }
+          </div>
+          <div className="dayDisplay">{currentDate.weekday}</div>
+        </div>
+        <div className="alert none">Please enable location to get salah timings!</div>
         <div className="timings">
           {Object.keys(salahTimings).map((key, index) => {
             if (key !== 'sunrise' && key !== 'sunset') {
