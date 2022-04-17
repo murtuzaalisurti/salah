@@ -38,7 +38,7 @@ export default function Home() {
       fetchTimings();
 
     } else {
-      fetchTimings();
+      // fetchTimings();
 
       let now = new Date().getDate();
 
