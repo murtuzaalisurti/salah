@@ -166,23 +166,39 @@ export default function Home() {
   useEffect(() => {
 
     document.querySelector('.pending') == null ? document.querySelector('.timings > div').classList.add('reset') : document.querySelector('.timings > div').classList.remove('reset');
-
     document.querySelectorAll('.pending').forEach((element, index) => {
       index == 0 && element.classList.add('first')
     })
   })
 
+  function fetchCalendar() {
+    fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
+        return res.json();
+      }).then((data) => {
+        localStorage.setItem('lastUpdatedMonth', JSON.stringify(currentDate.month));
+        localStorage.setItem('islamic-days', JSON.stringify(data.data));
+        setIslamicCalendar((prev) => {
+          return data.data;
+        })
+      }).catch((err) => {
+        console.log(err)
+      })
+  }
+
   useEffect(() => {
 
-    fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
-      return res.json();
-    }).then((data) => {
-      setIslamicCalendar((prev) => {
-        return data.data;
-      })
-    }).catch((err) => {
-      console.log(err)
-    })
+    if(localStorage.getItem('lastUpdatedMonth') == null || localStorage.getItem('islamic-days') == null) {
+      fetchCalendar();
+    } else {
+      if(currentDate.month === JSON.parse(localStorage.getItem('lastUpdatedMonth'))){
+        setIslamicCalendar((prev) => {
+          return JSON.parse(localStorage.getItem('islamic-days'));
+        })
+      } else {
+        fetchCalendar();
+      }
+    }
+    
   }, [])
 
   return (
