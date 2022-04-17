@@ -1,5 +1,6 @@
 $primary-color: #223843;
 $secondary-color: #EFF1F3;
+$done-color: #c2c3c47a;
 $border-color: #89959B;
 $highlight-color: #D8B4A0;
 
@@ -113,6 +114,11 @@ body {
         .pending.first, .reset {
             color: $highlight-color;
             border-color: $highlight-color;
+        }
+
+        .done {
+            color: $done-color;
+            border-color: $done-color;
         }
     }
 }
