@@ -128,15 +128,16 @@ body {
             }
 
         }
-        //:not(.pending) ~ .pending.first, .reset
-        .pending.first, .reset {
-            color: $highlight-color;
-            border-color: $highlight-color;
-        }
 
         .done {
             color: $done-color;
             border-color: $done-color;
+        }
+
+        //:not(.pending) ~ .pending.first, .reset
+        .pending.first, .reset {
+            color: $highlight-color;
+            border-color: $highlight-color;
         }
     }
 }
