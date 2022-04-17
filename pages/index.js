@@ -35,10 +35,10 @@ export default function Home() {
 
     if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
 
-      handlePermission();
+      fetchTimings();
 
     } else {
-      // handlePermission();
+      // fetchTimings();
 
       let now = new Date().getDate();
 
@@ -60,7 +60,7 @@ export default function Home() {
         })
 
       } else {
-        handlePermission();
+        fetchTimings();
       }
     }
 
@@ -70,6 +70,8 @@ export default function Home() {
   function fetchTimings() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
+
+        document.querySelector('.alert').classList.add('none');
 
         localStorage.setItem('last-fetch-date-for-prayerTimings', new Date().getDate());
 
@@ -110,14 +112,18 @@ export default function Home() {
           console.log(err);
         })
 
-      }, ((error) => {
+      }, (error) => {
         console.log(error)
-      }))
+        if(error.PERMISSION_DENIED || error.POSITION_UNAVAILABLE || error.TIMEOUT) {
+          document.querySelector('.alert').classList.remove('none');
+        }
+      })
     } else {
       console.log('geolocation api not supported');
     }
   }
 
+  // doesn't support Safari | MacOS | iOS
   function handlePermission() {
     navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
       if (result.state == 'granted') {
@@ -169,6 +175,7 @@ export default function Home() {
     document.querySelectorAll('.pending').forEach((element, index) => {
       index == 0 && element.classList.add('first')
     })
+
   })
 
   function fetchCalendar() {
@@ -198,7 +205,6 @@ export default function Home() {
         fetchCalendar();
       }
     }
-    
   }, [])
 
   return (
