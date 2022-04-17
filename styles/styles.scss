@@ -10,8 +10,26 @@ $highlight-color: #D8B4A0;
     box-sizing: border-box;
 }
 
+html {
+    scrollbar-color: $border-color;
+    scrollbar-width: thin;
+}
+
 body {
     background-color: $primary-color;
+
+    &::-webkit-scrollbar {
+        width: 0.2rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: $primary-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $border-color;
+        border-radius: 0.5rem;
+    }
 }
 
 .container {
