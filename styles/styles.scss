@@ -17,6 +17,7 @@ html {
 
 body {
     background-color: $primary-color;
+    overflow-x: hidden;
 
     &::-webkit-scrollbar {
         width: 0.2rem;
@@ -41,7 +42,7 @@ body {
         .circles {
             position: absolute;
             top: -10%;
-            left: -10%;
+            right: -10%;
             width: 50%;
             max-width: 18rem;
             height: auto;
@@ -51,11 +52,23 @@ body {
 }
 
 .main {
-    padding: 11rem 0 4rem 0;
+    padding: 6rem 0 4rem 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .currentSalah {
+
+        margin-bottom: 2rem;
+
+        .text {
+            font-family: "Poppins", sans-serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: $secondary-color;
+        }
+    }
 
     .alert {
         width: 80%;

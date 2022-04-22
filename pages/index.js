@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import moment from 'moment';
 
 export default function Home() {
@@ -18,6 +18,8 @@ export default function Home() {
 
   const [salah, setSalah] = useState(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Sunrise', 'Sunset']);
 
+  const [currentSalah, setCurrentSalah] = useState('');
+
   const [milliseconds, setMilliseconds] = useState(moment().format('x'));
 
   const [currentDate, setCurrentDate] = useState({
@@ -31,38 +33,8 @@ export default function Home() {
 
   // salah timings ----------------------------------------------
 
-  // retrieve prayer timings from localStorage or API
-  useEffect(() => {
-
-    if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
-      fetchTimings();
-    } else {
-      // fetchTimings();
-      let now = new Date().getDate();
-
-      if (now == Number(localStorage.getItem('last-fetch-date-for-prayerTimings'))) {
-        let timings = JSON.parse(localStorage.getItem('timings'));
-
-        setSalahTimings((prev) => {
-          return {
-            ...prev,
-            fajr: `${formatTime(timings.Fajr)}`,
-            dhuhr: `${formatTime(timings.Dhuhr)}`,
-            asr: `${formatTime(timings.Asr)}`,
-            maghrib: `${formatTime(timings.Maghrib)}`,
-            isha: `${formatTime(timings.Isha)}`,
-            sunrise: `${formatTime(timings.Sunrise)}`,
-            sunset: `${formatTime(timings.Sunset)}`
-          }
-        })
-      } else {
-        fetchTimings();
-      }
-    }
-  }, [])
-
   // fetch prayer timings from API
-  function fetchTimings() {
+  const fetchTimings = useCallback(() => {
 
     if (navigator.geolocation) {
 
@@ -114,7 +86,38 @@ export default function Home() {
     } else {
       console.log('geolocation api not supported');
     }
-  }
+  }, [currentDate]);
+  
+  // retrieve prayer timings from localStorage or API
+  useEffect(() => {
+
+    if (localStorage.getItem('timings') == null || localStorage.getItem('last-fetch-date-for-prayerTimings') == null) {
+      fetchTimings();
+    } else {
+      // fetchTimings();
+      let now = new Date().getDate();
+
+      if (now == Number(localStorage.getItem('last-fetch-date-for-prayerTimings'))) {
+        let timings = JSON.parse(localStorage.getItem('timings'));
+
+        setSalahTimings((prev) => {
+          return {
+            ...prev,
+            fajr: `${formatTime(timings.Fajr)}`,
+            dhuhr: `${formatTime(timings.Dhuhr)}`,
+            asr: `${formatTime(timings.Asr)}`,
+            maghrib: `${formatTime(timings.Maghrib)}`,
+            isha: `${formatTime(timings.Isha)}`,
+            sunrise: `${formatTime(timings.Sunrise)}`,
+            sunset: `${formatTime(timings.Sunset)}`
+          }
+        })
+      } else {
+        fetchTimings();
+      }
+    }
+  }, [fetchTimings])
+
 
   // doesn't support Safari | MacOS | iOS
   // so it's removed (not executed)
@@ -175,12 +178,31 @@ export default function Home() {
       index == 0 && element.classList.add('first')
     })
 
+    if(document.querySelector('.done') !== null) {
+
+      function calcCurrentSalah(element) {
+        element.childNodes.forEach((ele) => {
+          if(ele.classList.contains('whichsalah')){
+            setCurrentSalah((prev) => {
+              return ele.innerText;
+            })
+          }
+        })
+      }
+
+      document.querySelectorAll('.done').forEach((element, index) => {
+        if(index == (document.querySelectorAll('.done').length - 1)) {
+          calcCurrentSalah(element)
+        }
+      })
+    } 
+    
   })
 
   // calendar ----------------------------------------------------------
 
   // fetch islamic calendar from API
-  function fetchCalendar() {
+  const fetchCalendar = useCallback(() => {
     fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
         return res.json();
       }).then((data) => {
@@ -192,7 +214,7 @@ export default function Home() {
       }).catch((err) => {
         console.log(err)
       })
-  }
+  }, [currentDate])
 
   // retrieve islamic calendar from local storage or from API
   useEffect(() => {
@@ -208,7 +230,7 @@ export default function Home() {
         fetchCalendar();
       }
     }
-  }, [])
+  }, [fetchCalendar, currentDate])
 
   return (
     <div className='container'>
@@ -218,10 +240,14 @@ export default function Home() {
       </Head>
 
       <div className="circle-element">
-        <img className="circles" src="/images/circles.png" alt="circles" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {/* <img className="circles" src={'/images/circles.png'} alt="circles" /> */}
       </div>
 
       <main className='main'>
+        <div className="currentSalah">
+          <div className="text">{`${currentSalah}`}</div>
+        </div>
         <div className="fullDate">
           <div className="islamicDateDisplay">
             {
