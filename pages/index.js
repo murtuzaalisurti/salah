@@ -18,7 +18,15 @@ export default function Home() {
 
   const [salah, setSalah] = useState(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Sunrise', 'Sunset']);
 
-  const [currentSalah, setCurrentSalah] = useState('');
+  const [currentSalah, setCurrentSalah] = useState({
+    salah: '',
+    time: ''
+  });
+
+  const [nextSalah, setNextSalah] = useState({
+    salah: '',
+    time: ''
+  });
 
   const [milliseconds, setMilliseconds] = useState(moment().format('x'));
 
@@ -163,7 +171,7 @@ export default function Home() {
 
     let refresh = setInterval(() => {
       setMilliseconds(moment().format('x'))
-    }, 60000)
+    }, 1000)
 
     return () => {
       clearInterval(refresh);
@@ -171,33 +179,91 @@ export default function Home() {
   }, []);
 
   // pending and done salah timings display logic
+  function setNextAndCurrentSalah(element, NextOrCurrent) {
+
+    function timeAndSalah(ele, timeOrSalah) {
+      if(NextOrCurrent == 'current') {
+        setCurrentSalah((prev) => {
+          return {
+            ...prev,
+            [timeOrSalah]: ele.innerText
+          }
+        })
+      } else if(NextOrCurrent == 'next') {
+        setNextSalah((prev) => {
+          return {
+            ...prev,
+            [timeOrSalah]: ele.innerText
+          }
+        })
+      }
+    }
+
+    element.childNodes.forEach((ele) => {
+      if(ele.classList.contains('whichsalah')){
+        // if(NextOrCurrent == 'current') {
+        //   setCurrentSalah((prev) => {
+        //     return {
+        //       ...prev,
+        //       salah: ele.innerText
+        //     }
+        //   })
+        // } else if(NextOrCurrent == 'next') {
+        //   setNextSalah((prev) => {
+        //     return {
+        //       ...prev,
+        //       salah: ele.innerText
+        //     }
+        //   })
+        // }
+        timeAndSalah(ele, 'salah');
+      } else if(ele.classList.contains('time')) {
+        timeAndSalah(ele, 'time');
+      }
+    })
+  }
   useEffect(() => {
 
     document.querySelector('.pending') == null ? document.querySelector('.timings > div').classList.add('reset') : document.querySelector('.timings > div').classList.remove('reset');
     document.querySelectorAll('.pending').forEach((element, index) => {
       index == 0 && element.classList.add('first')
     })
-
+  })
+  
+  useEffect(() => {
     if(document.querySelector('.done') !== null) {
-
-      function calcCurrentSalah(element) {
-        element.childNodes.forEach((ele) => {
-          if(ele.classList.contains('whichsalah')){
-            setCurrentSalah((prev) => {
-              return ele.innerText;
-            })
-          }
-        })
-      }
-
       document.querySelectorAll('.done').forEach((element, index) => {
         if(index == (document.querySelectorAll('.done').length - 1)) {
-          calcCurrentSalah(element)
+          setNextAndCurrentSalah(element, 'current');
         }
       })
-    } 
+    }
     
-  })
+    if(document.querySelector('.pending') !== null) {
+      document.querySelectorAll('.pending').forEach((element, index) => {
+        if(index == 0) {
+          setNextAndCurrentSalah(element, 'next');
+        }
+      })
+    } else {
+      document.querySelectorAll('.done').forEach((element, index) => {
+        if(index == 0) {
+          setNextAndCurrentSalah(element, 'next');
+        }
+      })
+    }
+
+  }, [milliseconds])
+  
+  useEffect(() => {
+    console.log(moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm').format('HH:mm'));
+    console.log(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm').format('HH:mm'));
+  
+    let diff = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'hours');
+    let diffInMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'minutes')%60;
+    console.log(diff, diffInMinutes);
+
+  }, [currentSalah, nextSalah])
 
   // calendar ----------------------------------------------------------
 
@@ -246,7 +312,7 @@ export default function Home() {
 
       <main className='main'>
         <div className="currentSalah">
-          <div className="text">{`${currentSalah}`}</div>
+          <div className="text">{`${currentSalah.salah}`}</div>
         </div>
         <div className="fullDate">
           <div className="islamicDateDisplay">
