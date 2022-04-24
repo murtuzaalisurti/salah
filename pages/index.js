@@ -28,6 +28,11 @@ export default function Home() {
     time: ''
   });
 
+  const [timeUntilNextSalah, setTimeUntilNextSalah] = useState({
+    hours: '',
+    minutes: ''
+  });
+
   const [milliseconds, setMilliseconds] = useState(moment().format('x'));
 
   const [currentDate, setCurrentDate] = useState({
@@ -166,12 +171,16 @@ export default function Home() {
     return time.split(" ")[0]
   }
 
+  useEffect(() => {
+    setMilliseconds(moment().format('x'))
+  }, [])
+
   // update milliseconds at a specific interval
   useEffect(() => {
 
     let refresh = setInterval(() => {
       setMilliseconds(moment().format('x'))
-    }, 1000)
+    }, 60000)
 
     return () => {
       clearInterval(refresh);
@@ -201,21 +210,6 @@ export default function Home() {
 
     element.childNodes.forEach((ele) => {
       if(ele.classList.contains('whichsalah')){
-        // if(NextOrCurrent == 'current') {
-        //   setCurrentSalah((prev) => {
-        //     return {
-        //       ...prev,
-        //       salah: ele.innerText
-        //     }
-        //   })
-        // } else if(NextOrCurrent == 'next') {
-        //   setNextSalah((prev) => {
-        //     return {
-        //       ...prev,
-        //       salah: ele.innerText
-        //     }
-        //   })
-        // }
         timeAndSalah(ele, 'salah');
       } else if(ele.classList.contains('time')) {
         timeAndSalah(ele, 'time');
@@ -223,7 +217,6 @@ export default function Home() {
     })
   }
   useEffect(() => {
-
     document.querySelector('.pending') == null ? document.querySelector('.timings > div').classList.add('reset') : document.querySelector('.timings > div').classList.remove('reset');
     document.querySelectorAll('.pending').forEach((element, index) => {
       index == 0 && element.classList.add('first')
@@ -256,13 +249,20 @@ export default function Home() {
   }, [milliseconds])
   
   useEffect(() => {
-    console.log(moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm').format('HH:mm'));
-    console.log(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm').format('HH:mm'));
   
-    let diff = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'hours');
-    let diffInMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'minutes')%60;
-    console.log(diff, diffInMinutes);
+    // let diff = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'hours');
+    // let diffInMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'minutes')%60;
 
+    let timeUntilNextSalahinHours = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'Hmm')).diff(moment(`${moment().hours()}${moment().minutes()}`, 'Hmm'), 'hours');
+    let timeUntilNextSalahinMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'Hmm')).diff(moment(`${moment().hours()}${moment().minutes()}`, 'Hmm'), 'minutes')%60;
+
+    setTimeUntilNextSalah((prev) => {
+      return {
+        ...prev,
+        hours: timeUntilNextSalahinHours,
+        minutes: timeUntilNextSalahinMinutes
+      }
+    })
   }, [currentSalah, nextSalah])
 
   // calendar ----------------------------------------------------------
@@ -305,14 +305,11 @@ export default function Home() {
         <meta name="description" content="Islamic Prayer Timings" />
       </Head>
 
-      <div className="circle-element">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {/* <img className="circles" src={'/images/circles.png'} alt="circles" /> */}
-      </div>
-
       <main className='main'>
         <div className="currentSalah">
           <div className="text">{`${currentSalah.salah}`}</div>
+          <div className="timeUntilNextSalah">{`${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours} hrs` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}`}</div>
+          <div className="untilSalah">{`until ${nextSalah.salah}`}</div>
         </div>
         <div className="fullDate">
           <div className="islamicDateDisplay">

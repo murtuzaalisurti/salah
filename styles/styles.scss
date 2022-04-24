@@ -60,13 +60,37 @@ body {
 
     .currentSalah {
 
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        width: 100%;
+        max-width: 25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 2rem;
+        background-color: rgb(137 149 155 / 10%);
+        border-radius: 1rem;
 
-        .text {
+        .text, .timeUntilNextSalah, .untilSalah {
             font-family: "Poppins", sans-serif;
+            color: $secondary-color;
+        }
+
+        .timeUntilNextSalah, .untilSalah {
+            font-size: 0.9rem;
+        }
+
+        .timeUntilNextSalah {
+            font-size: 0.95rem;
+            color: $highlight-color;
+            background-color: rgb(137, 149, 155, 0.2);
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .text {
             font-size: 3rem;
             font-weight: bold;
-            color: $secondary-color;
+            margin-bottom: 1rem;
         }
     }
 
