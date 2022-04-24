@@ -180,7 +180,7 @@ export default function Home() {
 
     let refresh = setInterval(() => {
       setMilliseconds(moment().format('x'))
-    }, 60000)
+    }, 30000)
 
     return () => {
       clearInterval(refresh);
