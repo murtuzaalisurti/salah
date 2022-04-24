@@ -33,7 +33,7 @@ export default function Home() {
     minutes: ''
   });
 
-  const [milliseconds, setMilliseconds] = useState(moment().format('x'));
+  const [milliseconds, setMilliseconds] = useState('');
 
   const [currentDate, setCurrentDate] = useState({
     month: new Date().toLocaleString('default', {month: 'numeric'}),
@@ -246,15 +246,17 @@ export default function Home() {
       })
     }
 
-  }, [milliseconds])
+  }, [milliseconds, salahTimings, islamicCalendar])
   
   useEffect(() => {
-  
-    // let diff = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'hours');
-    // let diffInMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'hmm')).diff(moment(`${currentSalah.time.split(":")[0]}${currentSalah.time.split(":")[1]}`, 'hmm'), 'minutes')%60;
 
-    let timeUntilNextSalahinHours = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'Hmm')).diff(moment(`${moment().hours()}${moment().minutes()}`, 'Hmm'), 'hours');
-    let timeUntilNextSalahinMinutes = (moment(`${nextSalah.time.split(":")[0]}${nextSalah.time.split(":")[1]}`, 'Hmm')).diff(moment(`${moment().hours()}${moment().minutes()}`, 'Hmm'), 'minutes')%60;
+    // total minutes
+    let nextsalahcalcMinutes = Number(nextSalah.time.split(":")[0])*60 + Number(nextSalah.time.split(":")[1])
+    let currentTimeinMinutes = Number((moment().hours()*60)+(moment().minutes()))
+
+    // minutes excluding hours
+    let timeUntilNextSalahinMinutes = Number(nextsalahcalcMinutes - currentTimeinMinutes)%60;
+    let timeUntilNextSalahinHours = Math.floor(Number(nextsalahcalcMinutes - currentTimeinMinutes)/60)
 
     setTimeUntilNextSalah((prev) => {
       return {
@@ -263,6 +265,7 @@ export default function Home() {
         minutes: timeUntilNextSalahinMinutes
       }
     })
+
   }, [currentSalah, nextSalah])
 
   // calendar ----------------------------------------------------------
