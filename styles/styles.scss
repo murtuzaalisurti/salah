@@ -92,6 +92,20 @@ body {
             font-weight: bold;
             margin-bottom: 1rem;
         }
+
+        .diffLoading {
+            width: 5rem;
+            height: 1rem;
+            opacity: 0;
+            animation: loading 0.5s ease-in-out infinite alternate;
+        }
+
+        .nextsalah {
+            background-color: rgb(137, 149, 155, 0.2);
+            width: 3rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
     }
 
     .alert {
@@ -164,6 +178,30 @@ body {
                 font-weight: bold;
             }
 
+            .time-loading {
+                display: flex;
+                flex-direction: column;
+
+                .line {
+                    height: 1rem;
+                    border-radius: 1rem;
+                    opacity: 0;
+                    animation: loading 0.5s ease-in-out infinite alternate;
+                }
+
+                #line1 {
+                    width: 6rem;
+                    background-color: #f0f8ff75;
+                    margin-bottom: 0.7rem;
+                }
+
+                #line2 {
+                    width: 4rem;
+                    background-color: #f0f8ff4a;
+                }
+
+            }
+
         }
 
         .done {
@@ -177,5 +215,14 @@ body {
             color: $highlight-color;
             border-color: $highlight-color;
         }
+    }
+}
+
+@keyframes loading {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
     }
 }

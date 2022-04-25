@@ -259,6 +259,7 @@ export default function Home() {
     // minutes excluding hours
 
     let timeUntilNextSalahinMinutes, timeUntilNextSalahinHours;
+    
     if(currentTimeinMinutes < nextsalahcalcMinutes) {
       timeUntilNextSalahinMinutes = Number(nextsalahcalcMinutes - currentTimeinMinutes)%60;
       timeUntilNextSalahinHours = Math.floor(Number(nextsalahcalcMinutes - currentTimeinMinutes)/60)
@@ -267,8 +268,6 @@ export default function Home() {
       timeUntilNextSalahinMinutes = (Number(-1))*((Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)%60));
       timeUntilNextSalahinHours = (Number(-1))*(Math.floor(Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)/60));
     }
-
-    console.log(nextsalahcalcMinutes, currentTimeinMinutes)
 
     setTimeUntilNextSalah((prev) => {
       return {
@@ -322,9 +321,9 @@ export default function Home() {
 
       <main className='main'>
         <div className="currentSalah">
-          <div className="text">{`${currentSalah.salah}`}</div>
-          <div className="timeUntilNextSalah">{`${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours == 1 ? `${timeUntilNextSalah.hours} hr` : `${timeUntilNextSalah.hours} hrs`}` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}`}</div>
-          <div className="untilSalah">{`until ${nextSalah.salah}`}</div>
+          <div className="text">{`${salahTimings.fajr !== '00:00' ? currentSalah.salah : 'Salah'}`}</div>
+          <div className={`timeUntilNextSalah${salahTimings.fajr == '00:00' ? ' diffLoading' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours == 1 ? `${timeUntilNextSalah.hours} hr` : `${timeUntilNextSalah.hours} hrs`}` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}` : ''}`}</div>
+          <div className={`untilSalah${salahTimings.fajr == '00:00' ? ' diffLoading nextsalah' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `until ${nextSalah.salah}` : ''}`}</div>
         </div>
         <div className="fullDate">
           <div className="islamicDateDisplay">
@@ -342,12 +341,24 @@ export default function Home() {
         </div>
         <div className="alert none">Please enable location to get salah timings!</div>
         <div className="timings">
-          {Object.keys(salahTimings).map((key, index) => {
+          {salahTimings.fajr !== '00:00' ? Object.keys(salahTimings).map((key, index) => {
             if (key !== 'sunrise' && key !== 'sunset') {
               return (
                 <div className={`salah-time-individual-contain${moment({ hour: salahTimings[key].split(':')[0], minute: salahTimings[key].split(':')[1] }).format('x') > milliseconds ? ` pending` : ' done'}`} key={index}>
                   <div className='whichsalah'>{`${salah[index]}`}</div>
                   <div className="time">{`${salahTimings[key]}`}</div>
+                </div>
+              )
+            }
+          }) : Object.keys(salahTimings).map((key, index) => {
+            if (key !== 'sunrise' && key !== 'sunset') {
+              return (
+                <div className={`salah-time-individual-contain${moment({ hour: salahTimings[key].split(':')[0], minute: salahTimings[key].split(':')[1] }).format('x') > milliseconds ? ` pending` : ' done'}`} key={index}>
+                  <div className='whichsalah'>{`${salah[index]}`}</div>
+                  <div className="time time-loading">
+                    <div className="line" id="line1"></div>
+                    <div className="line" id="line2"></div>
+                  </div>
                 </div>
               )
             }
