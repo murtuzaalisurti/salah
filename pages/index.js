@@ -253,20 +253,21 @@ export default function Home() {
     // total minutes
     let nextsalahcalcMinutes = Number(nextSalah.time.split(":")[0])*60 + Number(nextSalah.time.split(":")[1])
     let currentTimeinMinutes = Number((moment().hours()*60)+(moment().minutes()))
-    // let currentTimeinMinutes = 1260;
-
 
     // minutes excluding hours
 
     let timeUntilNextSalahinMinutes, timeUntilNextSalahinHours;
     
     if(currentTimeinMinutes < nextsalahcalcMinutes) {
+
       timeUntilNextSalahinMinutes = Number(nextsalahcalcMinutes - currentTimeinMinutes)%60;
       timeUntilNextSalahinHours = Math.floor(Number(nextsalahcalcMinutes - currentTimeinMinutes)/60)
+
     } else if((currentTimeinMinutes > nextsalahcalcMinutes) && (currentTimeinMinutes > (Number(salahTimings.isha.split(":")[0])*60 + Number(salahTimings.isha.split(":")[1]))) && (currentTimeinMinutes <= 1440)) {
-      console.log(1)
+
       timeUntilNextSalahinMinutes = (Number(-1))*((Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)%60));
       timeUntilNextSalahinHours = (Number(-1))*(Math.floor(Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)/60));
+
     }
 
     setTimeUntilNextSalah((prev) => {
