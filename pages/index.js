@@ -253,10 +253,22 @@ export default function Home() {
     // total minutes
     let nextsalahcalcMinutes = Number(nextSalah.time.split(":")[0])*60 + Number(nextSalah.time.split(":")[1])
     let currentTimeinMinutes = Number((moment().hours()*60)+(moment().minutes()))
+    // let currentTimeinMinutes = 1260;
+
 
     // minutes excluding hours
-    let timeUntilNextSalahinMinutes = Number(nextsalahcalcMinutes - currentTimeinMinutes)%60;
-    let timeUntilNextSalahinHours = Math.floor(Number(nextsalahcalcMinutes - currentTimeinMinutes)/60)
+
+    let timeUntilNextSalahinMinutes, timeUntilNextSalahinHours;
+    if(currentTimeinMinutes < nextsalahcalcMinutes) {
+      timeUntilNextSalahinMinutes = Number(nextsalahcalcMinutes - currentTimeinMinutes)%60;
+      timeUntilNextSalahinHours = Math.floor(Number(nextsalahcalcMinutes - currentTimeinMinutes)/60)
+    } else if((currentTimeinMinutes > nextsalahcalcMinutes) && (currentTimeinMinutes > (Number(salahTimings.isha.split(":")[0])*60 + Number(salahTimings.isha.split(":")[1]))) && (currentTimeinMinutes <= 1440)) {
+      console.log(1)
+      timeUntilNextSalahinMinutes = (Number(-1))*((Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)%60));
+      timeUntilNextSalahinHours = (Number(-1))*(Math.floor(Number(currentTimeinMinutes - nextsalahcalcMinutes - 1320)/60));
+    }
+
+    console.log(nextsalahcalcMinutes, currentTimeinMinutes)
 
     setTimeUntilNextSalah((prev) => {
       return {
@@ -266,7 +278,7 @@ export default function Home() {
       }
     })
 
-  }, [currentSalah, nextSalah])
+  }, [currentSalah, nextSalah, salahTimings])
 
   // calendar ----------------------------------------------------------
 
@@ -311,7 +323,7 @@ export default function Home() {
       <main className='main'>
         <div className="currentSalah">
           <div className="text">{`${currentSalah.salah}`}</div>
-          <div className="timeUntilNextSalah">{`${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours} hrs` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}`}</div>
+          <div className="timeUntilNextSalah">{`${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours == 1 ? `${timeUntilNextSalah.hours} hr` : `${timeUntilNextSalah.hours} hrs`}` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}`}</div>
           <div className="untilSalah">{`until ${nextSalah.salah}`}</div>
         </div>
         <div className="fullDate">
