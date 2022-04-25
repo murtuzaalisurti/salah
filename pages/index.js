@@ -323,8 +323,11 @@ export default function Home() {
       <main className='main'>
         <div className="currentSalah">
           <div className="text">{`${salahTimings.fajr !== '00:00' ? currentSalah.salah : 'Salah'}`}</div>
-          <div className={`timeUntilNextSalah${salahTimings.fajr == '00:00' ? ' diffLoading' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours == 1 ? `${timeUntilNextSalah.hours} hr` : `${timeUntilNextSalah.hours} hrs`}` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}` : ''}`}</div>
-          <div className={`untilSalah${salahTimings.fajr == '00:00' ? ' diffLoading nextsalah' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `until ${nextSalah.salah}` : ''}`}</div>
+          <div className="infoAboutNextSalah">
+            <div className={`timeUntilNextSalah${salahTimings.fajr == '00:00' ? ' diffLoading' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `${timeUntilNextSalah.hours != 0 ? `${timeUntilNextSalah.hours == 1 ? `${timeUntilNextSalah.hours} hr` : `${timeUntilNextSalah.hours} hrs`}` : ''} ${timeUntilNextSalah.minutes != 0 ? `${timeUntilNextSalah.minutes} min` : ''}` : ''}`}</div>
+            <div className="until-text">until</div>
+            <div className={`untilSalah${salahTimings.fajr == '00:00' ? ' diffLoading nextsalah' : ''}`}>{`${salahTimings.fajr !== '00:00' ? `${nextSalah.salah}` : ''}`}</div>
+          </div>
         </div>
         <div className="fullDate">
           <div className="islamicDateDisplay">

@@ -70,21 +70,39 @@ body {
         background-color: rgb(137 149 155 / 10%);
         border-radius: 1rem;
 
-        .text, .timeUntilNextSalah, .untilSalah {
+        .infoAboutNextSalah {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            @media screen and (max-width: 22em) {
+                flex-direction: column;
+            }
+        }
+
+        .text, .timeUntilNextSalah, .untilSalah, .until-text {
             font-family: "Poppins", sans-serif;
             color: $secondary-color;
         }
 
-        .timeUntilNextSalah, .untilSalah {
+        .timeUntilNextSalah, .untilSalah, .until-text {
             font-size: 0.9rem;
         }
 
-        .timeUntilNextSalah {
+        .until-text {
+            margin: 0.5rem;
+        }
+
+        .timeUntilNextSalah, .untilSalah {
             font-size: 0.95rem;
             color: $highlight-color;
             background-color: rgb(137, 149, 155, 0.2);
-            padding: 0.3rem 0.5rem;
+            padding: 0.3rem 0.6rem;
             border-radius: 0.5rem;
+        }
+
+        .untilSalah {
+            padding: 0.3rem 0.8rem;
         }
         
         .text {
