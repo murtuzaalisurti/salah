@@ -324,7 +324,25 @@ export default function Home() {
       </Head>
 
       <main className='main'>
-        <input type="number" placeholder="method" id='method' value={method} onChange={(e) => setMethod(e.target.value)} />
+        {/* <input type="number" placeholder="method" id='method-input' value={method} onChange={(e) => setMethod(e.target.value)} /> */}
+
+        <select name="method" value={method} onChange={(e) => setMethod(e.target.value)} id="method">
+          <option value="0">Shia Ithna-Ansari</option>
+          <option value="1">University of Islamic Sciences, Karachi</option>
+          <option value="2">Islamic Society of North America</option>
+          <option value="3">Muslim World League</option>
+          <option value="4">Umm Al-Qura University, Makkah</option>
+          <option value="5">Egyptian General Authority of Survey</option>
+          <option value="7">Institute of Geophysics, University of Tehran</option>
+          <option value="8">Gulf Region</option>
+          <option value="9">Kuwait</option>
+          <option value="10">Qatar</option>
+          <option value="11">Majlis Ugama Islam Singapura, Singapore</option>
+          <option value="12">Union Organization islamic de France</option>
+          <option value="13">Diyanet İşleri Başkanlığı, Turkey</option>
+          <option value="14">Spiritual Administration of Muslims of Russia</option>
+          <option value="15">Moonsighting Committee Worldwide</option>
+        </select>
         <button className="method-btn" onClick={() => fetchTimings(method)}>calc</button>
         <div className="currentSalah">
           <div className="text">{`${salahTimings.fajr !== '00:00' ? currentSalah.salah : 'Salah'}`}</div>
