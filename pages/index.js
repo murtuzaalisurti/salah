@@ -18,6 +18,8 @@ export default function Home() {
 
   const [salah, setSalah] = useState(['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Sunrise', 'Sunset']);
 
+  const [method, setMethod] = useState(9);
+
   const [currentSalah, setCurrentSalah] = useState({
     salah: '',
     time: ''
@@ -47,7 +49,7 @@ export default function Home() {
   // salah timings ----------------------------------------------
 
   // fetch prayer timings from API
-  const fetchTimings = useCallback(() => {
+  const fetchTimings = useCallback((method = 9) => {
 
     if (navigator.geolocation) {
 
@@ -66,7 +68,8 @@ export default function Home() {
             latitude: latitude,
             longitude: longitude,
             month: currentDate.month,
-            year: currentDate.year
+            year: currentDate.year,
+            method: method
           })
         }).then((res) => {
           return res.json();
@@ -321,6 +324,8 @@ export default function Home() {
       </Head>
 
       <main className='main'>
+        <input type="number" placeholder="method" id='method' value={method} onChange={(e) => setMethod(e.target.value)} />
+        <button className="method-btn" onClick={() => fetchTimings(method)}>calc</button>
         <div className="currentSalah">
           <div className="text">{`${salahTimings.fajr !== '00:00' ? currentSalah.salah : 'Salah'}`}</div>
           <div className="infoAboutNextSalah">

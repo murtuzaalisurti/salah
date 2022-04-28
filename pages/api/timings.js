@@ -7,7 +7,7 @@ export default function handler(req, res) {
     try{
         let data = JSON.parse(req.body);
 
-        axios.get(`https://api.aladhan.com/v1/calendar?latitude=${data.latitude}&longitude=${data.longitude}&method=9&month=${data.month}&year=${data.year}`).then((res) => {
+        axios.get(`https://api.aladhan.com/v1/calendar?latitude=${data.latitude}&longitude=${data.longitude}&method=${data.method}&month=${data.month}&year=${data.year}`).then((res) => {
             let date = new Date().getDate();
             return res.data.data[date - 1].timings;
         }).then((data) => {
