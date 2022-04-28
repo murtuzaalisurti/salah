@@ -290,7 +290,6 @@ export default function Home() {
 
   // fetch islamic calendar from API
   const fetchCalendar = useCallback(() => {
-    console.log(currentDate.date, currentDate.month, currentDate.year);
     // gregorian to hijri date to know hijri date
     // https://api.aladhan.com/v1/gToH?date=07-12-2014?adjustment=1
 
@@ -317,7 +316,7 @@ export default function Home() {
     if(localStorage.getItem('lastUpdatedMonth') == null || localStorage.getItem('islamic-days') == null) {
       fetchCalendar();
     } else {
-      // fetchCalendar()
+
       if(currentDate.month === JSON.parse(localStorage.getItem('lastUpdatedMonth'))){
         setIslamicCalendar((prev) => {
           return JSON.parse(localStorage.getItem('islamic-days'));
@@ -325,6 +324,7 @@ export default function Home() {
       } else {
         fetchCalendar();
       }
+
     }
   }, [fetchCalendar, currentDate])
 
