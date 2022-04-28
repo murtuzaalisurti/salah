@@ -44,6 +44,12 @@ export default function Home() {
 
   const [islamicCalendar, setIslamicCalendar] = useState({});
 
+  const [nextIslamicMonth, setNextIslamicMonth] = useState({
+    name: '',
+    number: 1,
+    year: ''
+  })
+
   // salah timings ----------------------------------------------
 
   // fetch prayer timings from API
@@ -284,6 +290,13 @@ export default function Home() {
 
   // fetch islamic calendar from API
   const fetchCalendar = useCallback(() => {
+    // gregorian to hijri date to know hijri date
+    // https://api.aladhan.com/v1/gToH?date=07-12-2014?adjustment=1
+
+    // hijri to gregorian calendar
+    // https://api.aladhan.com/v1/hToGCalendar/11/1443?adjustment=-1
+
+    // gregorian to hijri calendar
     fetch(`https://api.aladhan.com/v1/gToHCalendar/${currentDate.month}/${currentDate.year}?adjustment=1`).then((res) => {
         return res.json();
       }).then((data) => {
@@ -303,6 +316,7 @@ export default function Home() {
     if(localStorage.getItem('lastUpdatedMonth') == null || localStorage.getItem('islamic-days') == null) {
       fetchCalendar();
     } else {
+
       if(currentDate.month === JSON.parse(localStorage.getItem('lastUpdatedMonth'))){
         setIslamicCalendar((prev) => {
           return JSON.parse(localStorage.getItem('islamic-days'));
@@ -310,8 +324,36 @@ export default function Home() {
       } else {
         fetchCalendar();
       }
+
     }
   }, [fetchCalendar, currentDate])
+
+  useEffect(() => {
+
+    fetch(`https://api.aladhan.com/v1/gToHCalendar/${Number(currentDate.month)+Number(1)}/${currentDate.year}?adjustment=1`).then((response) => {
+      return response.json();
+    }).then((data) => {
+
+      for(let i = 0; i < data.data.length; i++) {
+        if(i !== data.data.length - 1) {
+          if(data.data[i].hijri.day == 30) {
+
+            setNextIslamicMonth((prev) => {
+              return {
+                ...prev,
+                name: data.data[i+1].hijri.month.en,
+                number: data.data[i+1].hijri.month.number,
+                year: data.data[i+1].hijri.year
+              }
+            })
+
+            break;
+          }
+        }
+      }
+    })
+  }, [currentDate, islamicCalendar])
+
 
   return (
     <div className='container'>
@@ -334,8 +376,8 @@ export default function Home() {
             {
               islamicCalendar[currentDate.date - 1] !== undefined && (
                 <>
-                  <div className="islamDay">{islamicCalendar[currentDate.date - 1].hijri.day}</div>
-                  <div className="islamMonth">{islamicCalendar[currentDate.date - 1].hijri.month.en},</div>
+                  <div className="islamDay">{`${islamicCalendar[currentDate.date - 1].hijri.month.number % 2 == 0 ? (islamicCalendar[currentDate.date - 1].hijri.day == 30 ? Number(1) : islamicCalendar[currentDate.date - 1].hijri.day) : islamicCalendar[currentDate.date - 1].hijri.day}`}</div>
+                  <div className="islamMonth">{`${islamicCalendar[currentDate.date - 1].hijri.month.number % 2 == 0 ? (islamicCalendar[currentDate.date - 1].hijri.day == 30 ? nextIslamicMonth.name : islamicCalendar[currentDate.date - 1].hijri.month.en) : islamicCalendar[currentDate.date - 1].hijri.month.en}`},</div>
                   <div className="islamYear">{islamicCalendar[currentDate.date - 1].hijri.year}</div>
                 </>
               )
