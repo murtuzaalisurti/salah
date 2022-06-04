@@ -149,13 +149,33 @@ body {
 
         .islamicDateDisplay {
             display: flex;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
             gap: 0.5rem;
             font-family: 'Poppins', sans-serif;
-            align-items: center;
             font-size: 2rem;
             text-align: center;
             color: $highlight-color;
+
+            .islamYear {
+                font-size: 1.3rem;
+            }
+
+            .islamicDateAndMonthContain {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.7rem;
+                font-family: 'Poppins', sans-serif;
+                font-size: 2rem;
+                text-align: center;
+                color: $highlight-color;
+
+                @media screen and (max-width: 30em) {
+                    font-size: 1.7rem;
+                }
+            }
         }
 
         .dayDisplay {
