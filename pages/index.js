@@ -381,7 +381,7 @@ export default function Home() {
                   </div>
                   <div className="islamicDateAndMonthContain">
                     <div className="islamDay">{`${islamicCalendar[currentDate.date - 1].hijri.month.number % 2 == 0 ? (islamicCalendar[currentDate.date - 1].hijri.day == 30 ? Number(1) : islamicCalendar[currentDate.date - 1].hijri.day) : islamicCalendar[currentDate.date - 1].hijri.day}`}</div>
-                    <div className="islamMonth">{`${islamicCalendar[currentDate.date - 1].hijri.month.number % 2 == 0 ? (islamicCalendar[currentDate.date - 1].hijri.day == 30 ? nextIslamicMonth.name : islamicCalendar[currentDate.date - 1].hijri.month.en) : islamicCalendar[currentDate.date - 1].hijri.month.en}`},</div>
+                    <div className="islamMonth">{`${islamicCalendar[currentDate.date - 1].hijri.month.number % 2 == 0 ? (islamicCalendar[currentDate.date - 1].hijri.day == 30 ? nextIslamicMonth.name : islamicCalendar[currentDate.date - 1].hijri.month.en) : islamicCalendar[currentDate.date - 1].hijri.month.en}`}</div>
                   </div>
                 </>
               )
